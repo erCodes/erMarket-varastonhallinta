@@ -1,0 +1,38 @@
+﻿body {
+    background-color: lightblue;
+}
+
+#logo {
+    max-width: 300px;
+    max-height: 100%;
+}
+
+#company {
+    font-size: 24px;
+}
+
+#title {
+    font-size: 24px;
+}
+
+#pagecolor {
+    max-height: 24px;
+    max-width: 32px;
+}
+
+.container {
+    background-color: white;
+}
+
+.flags {
+    max-height: 24px;
+    max-width: 32px;
+    border-style: solid;
+    border-color: black;
+    border-width: 2px;
+}
+
+.stores {
+    width: 97px;
+    vertical-align: middle;
+}

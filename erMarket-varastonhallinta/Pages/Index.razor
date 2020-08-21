@@ -1,5 +1,48 @@
 ﻿@page "/"
 
-<h1>Hello, world!</h1>
+<link href="css/style.css" rel="stylesheet" />
 
-Welcome to your new app.
+<div class="container">
+    <div class="row p-2">
+        <div class="col-sm text-nowrap">
+            <div class="text-left" id="company">erMarket</div>
+        </div>
+        <div class="col-md-auto">
+            <div class="text-nowrap" id="title">Varastonhallinta</div>
+        </div>
+        <div class="col-md d-flex d-inline align-self-center justify-content-md-end text-nowrap">
+            <div class="d-flex d-inline">
+                <img class="flags" src="finnish.png" alt="FI" />
+                <div>&emsp;</div>
+                <img class="flags" src="english.png" alt="EN" />
+                <div>&emsp;</div>
+                <img id="pagecolor" src="darkmode.png" alt="Light/Dark" />
+            </div>
+        </div>
+    </div>
+    
+    <div class="row pt-4">
+        <div class="col text-center">
+            Valitse myymälä, minkä tietoja haluat katsella tai muuttaa.
+        </div>
+    </div>
+
+    <div class="row d-flex justify-content-center">
+        <div class="col-auto py-3">
+            <button type="button" class="stores btn-primary">Helsinki</button>
+        </div>
+        <div class="col-auto py-3">
+            <button type="button" class="stores btn-primary">Tampere</button>
+        </div>
+        <div class="col-auto py-3">
+            <button type="button" class="stores btn-primary">Jyväskylä</button>
+        </div>
+        <div class="col-auto py-3">
+            <button type="button" class="stores btn-primary">Oulu</button>
+        </div>
+        <div class="col-auto py-3">
+            <button type="button" class="stores btn-info">Muutosloki</button>
+        </div>
+    </div>
+
+</div>
