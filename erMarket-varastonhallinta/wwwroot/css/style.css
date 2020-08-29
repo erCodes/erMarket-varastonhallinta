@@ -27,12 +27,20 @@
 .flags {
     max-height: 24px;
     max-width: 32px;
-    border-style: solid;
-    border-color: black;
-    border-width: 2px;
+    border: 2px solid #000000;
 }
 
 .stores {
     width: 97px;
-    vertical-align: middle;
+    height: 28px;
+    border-radius: 10px;
 }
+
+.useractions {
+    background-color: #737373;
+    border-radius: 10px;
+    color: #ffffff;
+    width: 143px;
+    height: 28px;
+}
+
