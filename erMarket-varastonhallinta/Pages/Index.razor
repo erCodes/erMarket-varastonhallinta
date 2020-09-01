@@ -83,13 +83,72 @@
         // Browse products.
         else if (action == 1)
         {
-
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tuotteen nimi</th>
+                            <th scope="col">Hinta</th>
+                            <th scope="col">Määrä varastossa</th>
+                            <th scope="col">Määrä muuttunut</th>
+                            <th scope="col">Tuoteryhmät</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Product product in displayedInfo.Products)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>@product.Price</td>
+                                <td>@product.InStock</td>
+                                <td>@product.QuantityChanged.Date.ToShortDateString()</td>
+                                <td>
+                                    <select class="form-control-sm">
+                                        @foreach (ProductCategory category in product.Groups)
+                                        {
+                                            <option>@category.Name</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
 
         // Add new product.
         else if (action == 2)
         {
-
+            <h5>Lisää uusi tuote</h5>
+            <form>
+                <div class="row">
+                    <div class="col-md-6 py-2">
+                        <label for="productName">Tuotteen nimi</label>
+                        <input type="text" id="productName" class="form-control" />
+                    </div>
+                    <div class="col-md-6 py-2">
+                        <label for="price">Tuotteen hinta</label>
+                        <input type="text" id="price" class="form-control" />
+                    </div>
+                    <div class="col-md-6 py-2">
+                        <label for="amount">Lisättävä kappalemäärä</label>
+                        <input type="text" id="amount" class="form-control" />
+                    </div>
+                </div>
+                <div>Valitse tuoterymät</div>
+                <div class="row text-nowrap">
+                    @foreach (ProductCategory category in categories)
+                    {
+                        <div class="col-sm-6 py-2">
+                            <input type="checkbox" id="@category.Id" name="@category.Name" />
+                            <label for="@category.Id">@category.Name</label>
+                        </div>
+                    }
+                </div>
+                <input type="button" class="btn-primary" value="Lisää tuote" />
+                <div class="py-3"></div>
+            </form>
         }
 
         // Error case. Only for testing.
@@ -105,11 +164,10 @@
 
 @code
 {
-    List<Store> stores = AllStores.GetStores();
+    static List<ProductCategory> categories = AllCategories.GetProductCategories();
+    List<Store> stores = AllStores.GetStores(categories);
     Store displayedInfo = null;
     int action = 0;
-
-
 
     private void SelectedStore(int id)
     {

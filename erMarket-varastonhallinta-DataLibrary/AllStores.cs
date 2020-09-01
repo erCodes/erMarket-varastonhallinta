@@ -9,12 +9,12 @@ namespace erMarket_varastonhallinta_DataLibrary
     public class AllStores
     {
         // This file is temporary and it will be replaced as the work progresses.
-        public static List<Store> GetStores()
+        public static List<Store> GetStores(List<ProductCategory> productCategories)
         {
             List<Store> stores = new List<Store>();
 
             stores.Add(new Store {
-            Id = 1,
+            Id = 0,
             City = "Helsinki",
             Address = "Simonkatu 14",
             Supervisor = "-",
@@ -22,9 +22,33 @@ namespace erMarket_varastonhallinta_DataLibrary
             Email = "hlki@ermarket.fi"
             });
 
+            stores[0].Products.Add(new Product {
+            Id = 0,
+            Name = "Lehtisalaatti",
+            Price = (int)0.95,
+            InStock = 30,
+            QuantityChanged = Convert.ToDateTime("16/7/2020"),
+            });
+
+            stores[0].Products[0].Groups.Add(productCategories[0]);
+            stores[0].Products[0].Groups.Add(productCategories[1]);
+
+            stores[0].Products.Add(new Product
+            {
+                Id = 1,
+                Name = "Rasvaton maito",
+                Price = (int)0.80,
+                InStock = 40,
+                QuantityChanged = Convert.ToDateTime("20/7/2020"),
+            });
+
+            stores[0].Products[1].Groups.Add(productCategories[0]);
+            stores[0].Products[1].Groups.Add(productCategories[5]);
+            stores[0].Products[1].Groups.Add(productCategories[7]);
+
             stores.Add(new Store
             {
-                Id = 2,
+                Id = 1,
                 City = "Tampere",
                 Address = "Rautatienkatu 10",
                 Supervisor = "-",
@@ -34,7 +58,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 
             stores.Add(new Store
             {
-                Id = 3,
+                Id = 2,
                 City = "Jyväskylä",
                 Address = "Kauppakatu 24",
                 Supervisor = "-",
@@ -44,7 +68,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 
             stores.Add(new Store
             {
-                Id = 4,
+                Id = 3,
                 City = "Oulu",
                 Address = "Saaristonkatu 8",
                 Supervisor = "-",
