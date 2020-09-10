@@ -25,7 +25,6 @@ namespace erMarket_varastonhallinta_DataLibrary
             stores[0].Products.Add(new Product {
             Id = 0,
             Name = "Lehtisalaatti",
-            Price = (int)0.95,
             InStock = 30,
             QuantityChanged = Convert.ToDateTime("16/7/2020"),
             });
@@ -37,7 +36,6 @@ namespace erMarket_varastonhallinta_DataLibrary
             {
                 Id = 1,
                 Name = "Rasvaton maito",
-                Price = (int)0.80,
                 InStock = 40,
                 QuantityChanged = Convert.ToDateTime("20/7/2020"),
             });

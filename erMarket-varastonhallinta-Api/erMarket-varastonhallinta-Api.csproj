@@ -2,15 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>erMarket_varastonhallinta</RootNamespace>
+    <RootNamespace>erMarket_varastonhallinta_Api</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\erMarket-varastonhallinta-DataLibrary\erMarket-varastonhallinta-DataLibrary.csproj" />
   </ItemGroup>
+
 
 </Project>

@@ -18,62 +18,69 @@ using System.Net.Http;
 #nullable disable
 #nullable restore
 #line 2 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 3 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 4 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Components.Authorization;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 5 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.AspNetCore.Components.Routing;
+using Microsoft.AspNetCore.Components.Forms;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 6 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Routing;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 7 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using Microsoft.JSInterop;
+using Microsoft.AspNetCore.Components.Web;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 8 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using erMarket_varastonhallinta;
+using Microsoft.JSInterop;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 9 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
-using erMarket_varastonhallinta.Shared;
+using erMarket_varastonhallinta;
 
 #line default
 #line hidden
 #nullable disable
 #nullable restore
 #line 10 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
+using erMarket_varastonhallinta.Shared;
+
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 11 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\_Imports.razor"
 using erMarket_varastonhallinta_DataLibrary;
 
 #line default

@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 
 namespace erMarket_varastonhallinta_DataLibrary
 {
-    public class Product
+    public class NewProductToDb
     {
-        public int Id { get; set; }
         public string Name { get; set; }
+        public string InStock { get; set; }
         public List<ProductCategory> Groups { get; set; }
-        public int InStock { get; set; }
         public DateTime QuantityChanged { get; set; }
 
-        public Product()
+        public NewProductToDb()
         {
             Groups = new List<ProductCategory>();
         }
