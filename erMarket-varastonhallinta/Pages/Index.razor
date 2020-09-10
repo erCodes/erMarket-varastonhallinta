@@ -20,7 +20,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="row pt-4">
         <div class="col text-center">
             Valitse myymälä, minkä tietoja haluat katsella tai muuttaa.
@@ -28,21 +28,203 @@
     </div>
 
     <div class="row d-flex justify-content-center">
-        <div class="col-auto py-3">
-            <button type="button" class="stores btn-primary">Helsinki</button>
-        </div>
-        <div class="col-auto py-3">
-            <button type="button" class="stores btn-primary">Tampere</button>
-        </div>
-        <div class="col-auto py-3">
-            <button type="button" class="stores btn-primary">Jyväskylä</button>
-        </div>
-        <div class="col-auto py-3">
-            <button type="button" class="stores btn-primary">Oulu</button>
-        </div>
+        @if (stores != null)
+        {
+            @foreach (Store s in stores)
+            {
+                <div class="col-auto py-3">
+                    <button type="button" class="stores btn-primary" value="@s.Id" @onclick="(() => SelectedStore(s.Id))">@s.City</button>
+                </div>
+            }
+        }
         <div class="col-auto py-3">
             <button type="button" class="stores btn-info">Muutosloki</button>
         </div>
     </div>
 
+    @if (displayedInfo != null)
+    {
+        <h5>@displayedInfo.City</h5>
+        <div class="row py-2 text-nowrap">
+            <div class="col-sm-3">Osoite:</div>
+            <div class="col-sm">@displayedInfo.Address</div>
+        </div>
+        <div class="row py-2 text-nowrap">
+            <div class="col-sm-3">Esimies:</div>
+            <div class="col-sm">@displayedInfo.Supervisor</div>
+        </div>
+        <div class="row py-2 text-nowrap">
+            <div class="col-sm-3">Puhelin:</div>
+            <div class="col-sm">@displayedInfo.Phone</div>
+        </div>
+        <div class="row py-2 text-nowrap">
+            <div class="col-sm-3">Sähköposti:</div>
+            <div class="col-sm">@displayedInfo.Email</div>
+        </div>
+
+        <div class="row d-flex justify-content-center">
+            <div class="col-auto py-3">
+                <button type="button" class="useractions btn-secondary" @onclick="(() => ChangeAction(0))">Tarkemmat tiedot</button>
+            </div>
+            <div class="col-auto py-3">
+                <button type="button" class="useractions btn-secondary" @onclick="(() => ChangeAction(1))">Selaa tuotteita</button>
+            </div>
+            <div class="col-auto py-3">
+                <button type="button" class="useractions btn-secondary" @onclick="(() => ChangeAction(2))">Lisää uusi tuote</button>
+            </div>
+        </div>
+
+        // Additional Info.
+        @if (action == 0)
+        {
+
+        }
+
+        // Browse products.
+        else if (action == 1)
+        {
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tuotteen nimi</th>
+                            <th scope="col">Määrä varastossa</th>
+                            <th scope="col">Määrä muuttunut</th>
+                            <th scope="col">Tuoteryhmät</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (Product product in displayedInfo.Products)
+                        {
+                            <tr>
+                                <td>@product.Name</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div>@product.InStock&thinsp;</div>
+                                    <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;<button class="productbutton productbuttonsubmit">Muuta</button>
+                                    </div>
+                                </td>
+                                <td>@product.QuantityChanged.Date.ToShortDateString()</td>
+                                <td>
+                                    <select class="form-control-sm">
+                                        @foreach (ProductCategory category in product.Groups)
+                                        {
+                                            <option>@category.Name</option>
+                                        }
+                                    </select>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+
+        // Add new product.
+        else if (action == 2)
+        {
+            <h5>Lisää uusi tuote</h5>
+            <form>
+                <div class="row">
+                    <div class="col-md-6 py-2">
+                        <label for="productName">Tuotteen nimi</label>
+                        <input type="text" @bind="newProductName" id="productName" class="form-control" />
+                    </div>
+                    <div class="col-md py-2">
+                        <label for="amount">Lisättävä kappalemäärä</label>
+                        <input type="number" @bind="newProductQuantity" id="amount" style="width: 180px;" class="form-control" />
+                    </div>
+                </div>
+                <div>Valitse tuoterymät</div>
+                <div class="row text-nowrap">
+                    @foreach (ProductCategory category in categories)
+                    {
+                        <div class="col-sm-6 py-2">
+                            <input type="checkbox" @onchange="EventArgs => CheckboxClicked(category, EventArgs.Value)" id="@category.Id" name="@category.Name" />
+                            <label for="@category.Id">@category.Name</label>
+                        </div>
+                    }
+                </div>
+                <input type="button" @onclick="AddNewProduct" class="btn-primary" value="Lisää tuote" />
+                <div class="py-3"></div>
+            </form>
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
+    }
+
+
+
 </div>
+
+@code
+{
+    static List<ProductCategory> categories = AllCategories.GetProductCategories();
+    List<Store> stores = AllStores.GetStores(categories);
+    Store displayedInfo = null;
+    int action = 0;
+
+    string newProductName;
+    string newProductQuantity;
+    List<ProductCategory> newProductCategories = new List<ProductCategory>();
+
+    private void SelectedStore(int id)
+    {
+        foreach (Store s in stores)
+        {
+            if (s.Id == id)
+            {
+                displayedInfo = s;
+                break;
+            }
+        }
+    }
+
+    private void ChangeAction(int selected)
+    {
+        action = selected;
+    }
+
+    private void CheckboxClicked(ProductCategory category, object checkedCategory)
+    {
+        if ((bool)checkedCategory)
+        {
+            if (!newProductCategories.Contains(category))
+            {
+                newProductCategories.Add(category);
+            }
+        }
+
+        else
+        {
+            if (newProductCategories.Contains(category))
+            {
+                newProductCategories.Remove(category);
+            }
+        }
+    }
+
+    private async Task AddNewProduct()
+    {
+        HttpClient Http = new HttpClient();
+        NewProductToDb productToDb = new NewProductToDb {
+            Name = newProductName,
+            InStock = newProductQuantity,
+            Groups = newProductCategories,
+            QuantityChanged = DateTime.Now
+        };
+
+        string json = JsonSerializer.Serialize(productToDb);
+        var response = await Http.PostAsJsonAsync("http://localhost:54859/api/newproduct", json);
+        NewProductToDb data = await response.Content.ReadAsAsync<NewProductToDb>();
+
+        if (response.IsSuccessStatusCode)
+        {
+
+        }
+    }
+}
