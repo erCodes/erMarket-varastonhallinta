@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>erMarket_varastonhallinta_Dal</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Migrations\20200913234055_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200913234055_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20200914002414_InitialCreate.cs" />
+    <Compile Remove="Migrations\20200914002414_InitialCreate.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\erMarket-varastonhallinta-DataLibrary\erMarket-varastonhallinta-DataLibrary.csproj" />
+  </ItemGroup>
+
+</Project>

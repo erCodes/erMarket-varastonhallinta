@@ -8,6 +8,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 {
     public class NewProductToDb
     {
+        public int Store { get; set; }
         public string Name { get; set; }
         public string InStock { get; set; }
         public List<ProductCategory> Groups { get; set; }

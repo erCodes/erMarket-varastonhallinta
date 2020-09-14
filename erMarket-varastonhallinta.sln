@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "erMarket-varastonhallinta",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "erMarket-varastonhallinta-DataLibrary", "erMarket-varastonhallinta-DataLibrary\erMarket-varastonhallinta-DataLibrary.csproj", "{41E9AAEB-02FF-4F68-BD94-E9D08A14D81A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "erMarket-varastonhallinta-Api", "erMarket-varastonhallinta-Api\erMarket-varastonhallinta-Api.csproj", "{51F42CA9-8CC0-47C3-B812-4D2BDC9B7D76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "erMarket-varastonhallinta-Api", "erMarket-varastonhallinta-Api\erMarket-varastonhallinta-Api.csproj", "{51F42CA9-8CC0-47C3-B812-4D2BDC9B7D76}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "erMarket-varastonhallinta-Dal", "erMarket-varastonhallinta-Dal\erMarket-varastonhallinta-Dal.csproj", "{F42B07F0-A311-4931-B872-E1AEEF1BA2F7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{51F42CA9-8CC0-47C3-B812-4D2BDC9B7D76}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{51F42CA9-8CC0-47C3-B812-4D2BDC9B7D76}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{51F42CA9-8CC0-47C3-B812-4D2BDC9B7D76}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F42B07F0-A311-4931-B872-E1AEEF1BA2F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F42B07F0-A311-4931-B872-E1AEEF1BA2F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F42B07F0-A311-4931-B872-E1AEEF1BA2F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F42B07F0-A311-4931-B872-E1AEEF1BA2F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,6 +1,6 @@
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\bin\Debug\erMarket-varastonhallinta-DataLibrary.dll
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\bin\Debug\erMarket-varastonhallinta-DataLibrary.pdb
-D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\obj\Debug\erMarket-varastonhallinta-DataLibrary.csprojAssemblyReference.cache
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\obj\Debug\erMarket-varastonhallinta-DataLibrary.csproj.CoreCompileInputs.cache
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\obj\Debug\erMarket-varastonhallinta-DataLibrary.dll
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\obj\Debug\erMarket-varastonhallinta-DataLibrary.pdb
+D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta-DataLibrary\obj\Debug\erMarket-varastonhallinta-DataLibrary.csprojAssemblyReference.cache
