@@ -14,7 +14,7 @@ namespace erMarket_varastonhallinta_DataLibrary
             List<Store> stores = new List<Store>();
 
             stores.Add(new Store {
-            Id = 0,
+            Id = 1,
             City = "Helsinki",
             Address = "Simonkatu 14",
             Supervisor = "-",
@@ -46,7 +46,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 
             stores.Add(new Store
             {
-                Id = 1,
+                Id = 2,
                 City = "Tampere",
                 Address = "Rautatienkatu 10",
                 Supervisor = "-",
@@ -56,7 +56,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 
             stores.Add(new Store
             {
-                Id = 2,
+                Id = 3,
                 City = "Jyväskylä",
                 Address = "Kauppakatu 24",
                 Supervisor = "-",
@@ -66,7 +66,7 @@ namespace erMarket_varastonhallinta_DataLibrary
 
             stores.Add(new Store
             {
-                Id = 3,
+                Id = 4,
                 City = "Oulu",
                 Address = "Saaristonkatu 8",
                 Supervisor = "-",

@@ -212,6 +212,7 @@
     {
         HttpClient Http = new HttpClient();
         NewProductToDb productToDb = new NewProductToDb {
+            Store = displayedInfo.Id,
             Name = newProductName,
             InStock = newProductQuantity,
             Groups = newProductCategories,
