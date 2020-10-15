@@ -10,6 +10,7 @@ namespace erMarket_varastonhallinta_Dal.Dao
     public class Context : DbContext
     {
         public DbSet<DaoStore> Stores { get; set; }
+        public DbSet<DaoProductCategory> ProductCategories { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {

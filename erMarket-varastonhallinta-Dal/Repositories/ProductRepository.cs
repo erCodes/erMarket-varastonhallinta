@@ -58,5 +58,53 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                 return false;
             }
         }
+
+        public static List<Store> GetStoreNames()
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    List<Store> Stores = db.Stores
+                        .Select(x => new Store
+                        {
+                            Id = x.StoresId,
+                            City = x.City
+                        })
+                        .ToList();
+
+                    return Stores;
+                }
+            }
+
+            catch (ArgumentNullException)
+            {
+                return null;
+            }
+        }
+
+        public static List<ProductCategory> GetProductCategories()
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    List<ProductCategory> categories = db.ProductCategories
+                        .Select(x => new ProductCategory
+                        {
+                            Id = x.CategorysId,
+                            Name = x.CategorysName
+                        })
+                        .ToList();
+
+                    return categories;
+                }
+            }
+
+            catch
+            {
+                return null;
+            }
+        }
     }
 }

@@ -68,7 +68,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
 
                     b.HasIndex("DaoProductId");
 
-                    b.ToTable("DaoProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoStore", b =>

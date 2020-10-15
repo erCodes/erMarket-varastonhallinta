@@ -49,7 +49,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DaoProductCategory",
+                name: "ProductCategories",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -60,9 +60,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DaoProductCategory", x => x.Id);
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DaoProductCategory_DaoProduct_DaoProductId",
+                        name: "FK_ProductCategories_DaoProduct_DaoProductId",
                         column: x => x.DaoProductId,
                         principalTable: "DaoProduct",
                         principalColumn: "Id",
@@ -75,15 +75,15 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 column: "DaoStoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DaoProductCategory_DaoProductId",
-                table: "DaoProductCategory",
+                name: "IX_ProductCategories_DaoProductId",
+                table: "ProductCategories",
                 column: "DaoProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DaoProductCategory");
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "DaoProduct");

@@ -101,7 +101,7 @@
                                 <td>
                                     <div class="d-flex align-items-center">
                                         <div>@product.InStock&thinsp;</div>
-                                    <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;<button class="productbutton productbuttonsubmit">Muuta</button>
+                                        <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;<button class="productbutton productbuttonsubmit">Muuta</button>
                                     </div>
                                 </td>
                                 <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -163,8 +163,8 @@
 
 @code
 {
-    static List<ProductCategory> categories = AllCategories.GetProductCategories();
-    List<Store> stores = AllStores.GetStores(categories);
+    static List<ProductCategory> categories = new List<ProductCategory>();
+    List<Store> stores = new List<Store>();
     Store displayedInfo = null;
     int action = 0;
 
@@ -172,7 +172,41 @@
     string newProductQuantity;
     List<ProductCategory> newProductCategories = new List<ProductCategory>();
 
-    private void SelectedStore(int id)
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllStores();
+        await GetAllCategories();
+    }
+
+    private async Task GetAllStores()
+    {
+        HttpClient Http = new HttpClient();
+        var response = await Http.GetAsync("http://localhost:54859/api/getstorenames");
+
+        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        {
+            string json = await response.Content.ReadAsStringAsync();
+            stores = JsonSerializer.Deserialize<List<Store>>(json);
+        }
+
+        else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+        {
+
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
+    }
+
+    private async Task GetAllCategories()
+    {
+        HttpClient Http = new HttpClient();
+    }
+
+    private async Task SelectedStore(int id)
     {
         foreach (Store s in stores)
         {
@@ -182,6 +216,17 @@
                 break;
             }
         }
+
+        await GetSelectedStoresData();
+    }
+
+    private async Task GetSelectedStoresData()
+    {
+        HttpClient Http = new HttpClient();
+        string json = JsonSerializer.Serialize(displayedInfo.Id);
+        var response = await Http.GetAsync("http://localhost:54859/api/getstoresdata?storeid=" + displayedInfo.Id);
+        Store data = await response.Content.ReadAsAsync<Store>();
+
     }
 
     private void ChangeAction(int selected)
@@ -211,7 +256,8 @@
     private async Task AddNewProduct()
     {
         HttpClient Http = new HttpClient();
-        NewProductToDb productToDb = new NewProductToDb {
+        NewProductToDb productToDb = new NewProductToDb
+        {
             Store = displayedInfo.Id,
             Name = newProductName,
             InStock = newProductQuantity,

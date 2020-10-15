@@ -10,7 +10,7 @@ using erMarket_varastonhallinta_Dal.Dao;
 namespace erMarket_varastonhallinta_Dal.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20200914005441_InitialCreate")]
+    [Migration("20201005161728_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -70,7 +70,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
 
                     b.HasIndex("DaoProductId");
 
-                    b.ToTable("DaoProductCategory");
+                    b.ToTable("ProductCategories");
                 });
 
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoStore", b =>
