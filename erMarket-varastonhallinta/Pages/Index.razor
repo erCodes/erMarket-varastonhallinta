@@ -94,26 +94,30 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (Product product in displayedInfo.Products)
+                        @if (displayedInfo.Products != null && displayedInfo.Products.Any())
                         {
-                            <tr>
-                                <td>@product.Name</td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <div>@product.InStock&thinsp;</div>
-                                        <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;<button class="productbutton productbuttonsubmit">Muuta</button>
-                                    </div>
-                                </td>
-                                <td>@product.QuantityChanged.Date.ToShortDateString()</td>
-                                <td>
-                                    <select class="form-control-sm">
-                                        @foreach (ProductCategory category in product.Groups)
-                                        {
-                                            <option>@category.Name</option>
-                                        }
-                                    </select>
-                                </td>
-                            </tr>
+                            foreach (Product product in displayedInfo.Products)
+                            {
+                                <tr>
+                                    <td>@product.Name</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div>@product.InStock&thinsp;</div>
+                                            <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;
+                                            <button class="productbutton productbuttonsubmit">Muuta</button>
+                                        </div>
+                                    </td>
+                                    <td>@product.QuantityChanged.Date.ToShortDateString()</td>
+                                    <td>
+                                        <select class="form-control-sm">
+                                            @foreach (ProductCategory category in product.Groups)
+                                            {
+                                                <option>@category.Name</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
                 </table>
@@ -183,15 +187,14 @@
         HttpClient Http = new HttpClient();
         var response = await Http.GetAsync("http://localhost:54859/api/getstorenames");
 
-        if (response.StatusCode == System.Net.HttpStatusCode.OK)
+        if (response.StatusCode == HttpStatusCode.OK)
         {
-            string json = await response.Content.ReadAsStringAsync();
-            stores = JsonSerializer.Deserialize<List<Store>>(json);
+            stores = await response.Content.ReadAsAsync<List<Store>>();
         }
 
-        else if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+        else if (response.StatusCode == HttpStatusCode.NoContent)
         {
-
+            // If there are no stores.
         }
 
         // Error case. Only for testing.
@@ -204,6 +207,23 @@
     private async Task GetAllCategories()
     {
         HttpClient Http = new HttpClient();
+        var response = await Http.GetAsync("http://localhost:54859/api/getallcategories");
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            categories = await response.Content.ReadAsAsync<List<ProductCategory>>();
+        }
+
+        else if (response.StatusCode == HttpStatusCode.NoContent)
+        {
+
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
     }
 
     private async Task SelectedStore(int id)
@@ -226,7 +246,7 @@
         string json = JsonSerializer.Serialize(displayedInfo.Id);
         var response = await Http.GetAsync("http://localhost:54859/api/getstoresdata?storeid=" + displayedInfo.Id);
         Store data = await response.Content.ReadAsAsync<Store>();
-
+        displayedInfo = data;
     }
 
     private void ChangeAction(int selected)
@@ -250,6 +270,11 @@
             {
                 newProductCategories.Remove(category);
             }
+
+            else
+            {
+                throw new Exception();
+            }
         }
     }
 
@@ -271,7 +296,27 @@
 
         if (response.IsSuccessStatusCode)
         {
+            await GetSelectedStoresData();
+        }
+    }
 
+    private async Task ChangeProductsQuantity(int productsId, int newQuantity)
+    {
+        HttpClient Http = new HttpClient();
+
+        ProductToBeChanged productToBeChanged = new ProductToBeChanged {
+            StoresId = displayedInfo.Id,
+            ProductsId = productsId,
+            NewQuantity = newQuantity,
+            QuantityChanged = DateTime.Now
+        };
+
+        string json = JsonSerializer.Serialize(productToBeChanged);
+        var response = await Http.PutAsJsonAsync("http://localhost:54859/api/changeproductquantity", json);
+
+        if (response.IsSuccessStatusCode)
+        {
+            
         }
     }
 }

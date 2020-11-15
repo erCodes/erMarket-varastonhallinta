@@ -16,9 +16,17 @@ namespace erMarket_varastonhallinta_Api.Controllers
         [Route("api/getstoresdata")]
         public async Task<IActionResult> GetStoresData([FromQuery(Name = "storeid")]int id)
         {
-            int test = id;
+            Store data = ProductRepository.GetSelectedStoresData(id);
 
-            return Ok(test);
+            if (data != null)
+            {
+                return Ok(data);
+            }
+
+            else
+            {
+                return NoContent();
+            }
         }
 
         [HttpGet]
@@ -39,12 +47,20 @@ namespace erMarket_varastonhallinta_Api.Controllers
         }
 
         [HttpGet]
-        [Route("")]
+        [Route("api/getallcategories")]
         public async Task<IActionResult> GetProductCategories()
         {
-            List<ProductCategory> categories = new List<ProductCategory>();
+            List<ProductCategory> categories = ProductRepository.GetProductCategories();
 
-            return Ok(categories);
+            if (categories.Any())
+            {
+                return Ok(categories);
+            }
+
+            else
+            {
+                return NoContent();
+            }
         }
     }
 }

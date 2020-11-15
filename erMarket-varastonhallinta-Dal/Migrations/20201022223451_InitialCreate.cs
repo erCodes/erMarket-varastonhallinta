@@ -8,6 +8,20 @@ namespace erMarket_varastonhallinta_Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ProductCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategorysId = table.Column<int>(nullable: false),
+                    CategorysName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stores",
                 columns: table => new
                 {
@@ -49,7 +63,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "ProductCategories",
+                name: "DaoProductCategory",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
@@ -60,9 +74,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                    table.PrimaryKey("PK_DaoProductCategory", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_ProductCategories_DaoProduct_DaoProductId",
+                        name: "FK_DaoProductCategory_DaoProduct_DaoProductId",
                         column: x => x.DaoProductId,
                         principalTable: "DaoProduct",
                         principalColumn: "Id",
@@ -75,13 +89,16 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 column: "DaoStoreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_ProductCategories_DaoProductId",
-                table: "ProductCategories",
+                name: "IX_DaoProductCategory_DaoProductId",
+                table: "DaoProductCategory",
                 column: "DaoProductId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "DaoProductCategory");
+
             migrationBuilder.DropTable(
                 name: "ProductCategories");
 

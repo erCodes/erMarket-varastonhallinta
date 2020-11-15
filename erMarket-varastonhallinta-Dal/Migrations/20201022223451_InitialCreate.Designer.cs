@@ -10,7 +10,7 @@ using erMarket_varastonhallinta_Dal.Dao;
 namespace erMarket_varastonhallinta_Dal.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20201005161728_InitialCreate")]
+    [Migration("20201022223451_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,24 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 .HasAnnotation("ProductVersion", "3.1.8")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoCategories", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategorysId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategorysName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductCategories");
+                });
 
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoProduct", b =>
                 {
@@ -70,7 +88,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
 
                     b.HasIndex("DaoProductId");
 
-                    b.ToTable("ProductCategories");
+                    b.ToTable("DaoProductCategory");
                 });
 
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoStore", b =>

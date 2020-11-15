@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using erMarket_varastonhallinta_Dal.Dao;
 using erMarket_varastonhallinta_DataLibrary;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace erMarket_varastonhallinta_Dal.Repositories
 {
@@ -35,14 +36,21 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         data.Categories.Add(daoProductCategory);
                     }
 
-                    DaoStore store = db.Stores.FirstOrDefault(x => x.Id == newProduct.Store);
+                    // Lisää include
+                    //DaoStore store = db.Stores.FirstOrDefault(x => x.Id == newProduct.Store);
+                    DaoStore store = db.Stores
+                        .Where(x => x.Id == newProduct.Store)
+                        .Include(x => x.Products)
+                        .ThenInclude(x => x.Categories)
+                        .FirstOrDefault();
+
 
                     if (store.Products == null)
                     {
                         store.Products = new List<DaoProduct>();
                     }
 
-                    data.ProductsId = store.Products.Count + 1;
+                    data.ProductsId = store.Products.Max(x => x.ProductsId) + 1;
 
                     store.Products.Add(data);
                     db.Entry(store).State = EntityState.Modified;
@@ -98,6 +106,63 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         .ToList();
 
                     return categories;
+                }
+            }
+
+            catch
+            {
+                return null;
+            }
+        }
+
+        public static Store GetSelectedStoresData(int id)
+        {
+            try
+            {
+                DaoStore selected = new DaoStore();
+                Store returned = new Store();
+                returned.Products = new List<Product>();
+
+                using (Context db = new Context())
+                {
+                    DaoStore data = db.Stores
+                        .Where(x => x.StoresId == id)
+                        .Include(x => x.Products)
+                        .ThenInclude(x => x.Categories)
+                        .FirstOrDefault();
+
+                    returned.Id = data.StoresId;
+                    returned.City = data.City;
+                    returned.Address = data.Address;
+                    returned.Email = data.Email;
+                    returned.Phone = data.Phone;
+                    returned.Supervisor = data.Supervisor;
+                    
+                    foreach (DaoProduct dao in data.Products)
+                    {
+                        Product product = new Product
+                        {
+                            Id = dao.ProductsId,
+                            Name = dao.Name,
+                            InStock = dao.InStock,
+                            QuantityChanged = dao.QuantityChanged
+                        };
+
+                        foreach (DaoProductCategory daoCategory in dao.Categories)
+                        {
+                            ProductCategory category = new ProductCategory
+                            {
+                                Id = daoCategory.CategorysId,
+                                Name = daoCategory.CategorysName
+                            };
+
+                            product.Groups.Add(category);
+                        }
+
+                        returned.Products.Add(product);
+                    }
+
+                    return returned;
                 }
             }
 

@@ -37,6 +37,7 @@ namespace erMarket_varastonhallinta_Api.Controllers
                     return Ok();
                 }
 
+                // 500 = server error
                 else
                 {
                     return StatusCode(500);
