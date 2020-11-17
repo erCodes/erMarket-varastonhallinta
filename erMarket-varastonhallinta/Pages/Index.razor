@@ -1,4 +1,5 @@
 ﻿@page "/"
+@inject IJSRuntime JS;
 
 <link href="css/style.css" rel="stylesheet" />
 
@@ -103,8 +104,8 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div>@product.InStock&thinsp;</div>
-                                            <input type="number" min="0" max="9999" step=".01" style="width: 80px;" class="form-control-sm" />&thinsp;
-                                            <button class="productbutton productbuttonsubmit">Muuta</button>
+                                            <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
+                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id))">Muuta</button>
                                         </div>
                                     </td>
                                     <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -171,6 +172,7 @@
     List<Store> stores = new List<Store>();
     Store displayedInfo = null;
     int action = 0;
+    int newValue = 0;
 
     string newProductName;
     string newProductQuantity;
@@ -300,11 +302,25 @@
         }
     }
 
+    private async Task TakeNewValue(string store, int productId)
+    {
+        string elementsId = store + "+" + productId.ToString();
+
+        string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
+
+        if (int.TryParse(value, out int num))
+        {
+            await ChangeProductsQuantity(productId, num);
+        }
+
+    }
+
     private async Task ChangeProductsQuantity(int productsId, int newQuantity)
     {
         HttpClient Http = new HttpClient();
 
-        ProductToBeChanged productToBeChanged = new ProductToBeChanged {
+        ProductToBeChanged productToBeChanged = new ProductToBeChanged
+        {
             StoresId = displayedInfo.Id,
             ProductsId = productsId,
             NewQuantity = newQuantity,

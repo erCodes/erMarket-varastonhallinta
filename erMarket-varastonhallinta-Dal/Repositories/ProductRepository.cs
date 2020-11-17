@@ -36,8 +36,6 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         data.Categories.Add(daoProductCategory);
                     }
 
-                    // Lisää include
-                    //DaoStore store = db.Stores.FirstOrDefault(x => x.Id == newProduct.Store);
                     DaoStore store = db.Stores
                         .Where(x => x.Id == newProduct.Store)
                         .Include(x => x.Products)
@@ -63,6 +61,44 @@ namespace erMarket_varastonhallinta_Dal.Repositories
             catch (Exception e)
             {
                 Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool ChangeQuantity(ProductToBeChanged data)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    DaoStore store = db.Stores
+                        .Where(x => x.StoresId == data.StoresId && x.Products.Any(y => y.ProductsId == data.ProductsId))
+                        .Include(x => x.Products)
+                        .FirstOrDefault();
+
+                    if (store != null)
+                    {
+                        DaoProduct product = store.Products
+                            .Where(x => x.ProductsId == data.ProductsId)
+                            .First();
+
+                        product.InStock = data.NewQuantity;
+                        product.QuantityChanged = data.QuantityChanged;
+                        db.Entry(product).State = EntityState.Modified;
+
+                        db.SaveChanges();
+                        return true;
+                    }
+
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            catch
+            {
                 return false;
             }
         }
