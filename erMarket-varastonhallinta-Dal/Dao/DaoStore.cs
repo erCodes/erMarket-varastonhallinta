@@ -18,6 +18,5 @@ namespace erMarket_varastonhallinta_Dal.Dao
         public string Phone { get; set; }
         public string Email { get; set; }
         public List<DaoProduct> Products { get; set; }
-
     }
 }

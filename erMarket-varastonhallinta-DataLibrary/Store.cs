@@ -16,9 +16,9 @@ namespace erMarket_varastonhallinta_DataLibrary
         public string Email { get; set; }
         public List<Product> Products { get; set; }
 
-        public Store()
-        {
-            Products = new List<Product>();
-        }
+        //public Store()
+        //{
+        //    Products = new List<Product>();
+        //}
     }
 }

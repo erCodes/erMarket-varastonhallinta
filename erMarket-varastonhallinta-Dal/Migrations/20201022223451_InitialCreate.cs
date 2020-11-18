@@ -8,6 +8,20 @@ namespace erMarket_varastonhallinta_Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ProductCategories",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategorysId = table.Column<int>(nullable: false),
+                    CategorysName = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductCategories", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Stores",
                 columns: table => new
                 {
@@ -84,6 +98,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DaoProductCategory");
+
+            migrationBuilder.DropTable(
+                name: "ProductCategories");
 
             migrationBuilder.DropTable(
                 name: "DaoProduct");

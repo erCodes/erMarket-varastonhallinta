@@ -19,6 +19,24 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoCategories", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategorysId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CategorysName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ProductCategories");
+                });
+
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoProduct", b =>
                 {
                     b.Property<int>("Id")
