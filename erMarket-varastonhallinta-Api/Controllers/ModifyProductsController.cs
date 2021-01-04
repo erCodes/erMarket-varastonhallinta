@@ -36,5 +36,31 @@ namespace erMarket_varastonhallinta_Api.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpDelete("Delete")]
+        [Route("api/removeproduct")]
+        public async Task<IActionResult> RemoveProduct(int id, int ide)
+        {
+            int storesId = id;
+            int productsId = ide;
+
+            if (storesId >= 0 && productsId >= 0)
+            {
+                if (ProductRepository.RemoveProduct(storesId, productsId))
+                {
+                    return Ok();
+                }
+
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }

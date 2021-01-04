@@ -48,7 +48,15 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         store.Products = new List<DaoProduct>();
                     }
 
-                    data.ProductsId = store.Products.Max(x => x.ProductsId) + 1;
+                    if (store.Products.Any())
+                    {
+                        data.ProductsId = store.Products.Max(x => x.ProductsId) + 1;
+                    }
+                    
+                    else
+                    {
+                        data.ProductsId = 1;
+                    }
 
                     store.Products.Add(data);
                     db.Entry(store).State = EntityState.Modified;
@@ -85,6 +93,45 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         product.InStock = data.NewQuantity;
                         product.QuantityChanged = data.QuantityChanged;
                         db.Entry(product).State = EntityState.Modified;
+
+                        db.SaveChanges();
+                        return true;
+                    }
+
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool RemoveProduct(int storesId, int productsId)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    DaoStore store = db.Stores
+                        .Where(x => x.StoresId == storesId)
+                        .Include(x => x.Products)
+                        .ThenInclude(x => x.Categories)
+                        .FirstOrDefault();
+
+                    if (store != null)
+                    {
+                        DaoProduct product = store.Products
+                            .Where(x => x.ProductsId == productsId)
+                            .First();
+
+                        store.Products.Remove(product);
+                        db.Entry(product).State = EntityState.Deleted;
 
                         db.SaveChanges();
                         return true;

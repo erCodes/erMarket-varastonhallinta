@@ -102,7 +102,7 @@
                                 <tr>
                                     <td>@product.Name</td>
                                     <td>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-content-center">
                                             <div>@product.InStock&thinsp;</div>
                                             <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
                                             <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id))">Muuta</button>
@@ -116,6 +116,9 @@
                                                 <option>@category.Name</option>
                                             }
                                         </select>
+                                    </td>
+                                    <td>
+                                        <img src="close.png" id="deleteproduct" @onclick="(() => RemoveProduct(displayedInfo.Id, product.Id))" />
                                     </td>
                                 </tr>
                             }
@@ -332,7 +335,19 @@
 
         if (response.IsSuccessStatusCode)
         {
-            
+
+        }
+    }
+
+    private async Task RemoveProduct(int storesId, int productsId)
+    {
+        HttpClient Http = new HttpClient();
+
+        var response = await Http.DeleteAsync($"http://localhost:54859/api/removeproduct/?id={storesId}&ide={productsId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+
         }
     }
 }

@@ -57,3 +57,9 @@
 .productbuttonsubmit {
     
 }
+
+#deleteproduct {
+    max-height: 24px;
+    max-width: 32px;
+    cursor: pointer;
+}
