@@ -130,9 +130,12 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                             .Where(x => x.ProductsId == productsId)
                             .First();
 
-                        store.Products.Remove(product);
-                        db.Entry(product).State = EntityState.Deleted;
+                        foreach (var item in product.Categories)
+                        {
+                            db.Entry(item).State = EntityState.Deleted;
+                        }
 
+                        db.Entry(product).State = EntityState.Deleted;
                         db.SaveChanges();
                         return true;
                     }
@@ -144,8 +147,9 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                 }
             }
 
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }
