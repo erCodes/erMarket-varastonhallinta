@@ -1,6 +1,5 @@
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\appsettings.Development.json
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\appsettings.json
-D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\Properties\launchSettings.json
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\erMarket-varastonhallinta.exe
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\erMarket-varastonhallinta.deps.json
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\bin\Debug\netcoreapp3.1\erMarket-varastonhallinta.runtimeconfig.json
@@ -45,3 +44,5 @@ D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\Debug\netcoreapp3.1\Razor\Pages\Index.razor.g.cs
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\Debug\netcoreapp3.1\Razor\Shared\MainLayout.razor.g.cs
 D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\Debug\netcoreapp3.1\Razor\_Imports.razor.g.cs
+D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\Debug\netcoreapp3.1\erMarket-varastonhallinta.RazorComponent.output.cache
+D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\obj\Debug\netcoreapp3.1\scopedcss\bundle\erMarket-varastonhallinta.styles.css
