@@ -82,9 +82,19 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                     b.Property<int?>("DaoProductId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("LogDataId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("LogDataId1")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("DaoProductId");
+
+                    b.HasIndex("LogDataId");
+
+                    b.HasIndex("LogDataId1");
 
                     b.ToTable("DaoProductCategory");
                 });
@@ -119,6 +129,39 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                     b.ToTable("Stores");
                 });
 
+            modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.LogData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("NewAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OldAmount")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductsName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("StoreId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Timestamp")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserAction")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ChangeLog");
+                });
+
             modelBuilder.Entity("erMarket_varastonhallinta_Dal.Dao.DaoProduct", b =>
                 {
                     b.HasOne("erMarket_varastonhallinta_Dal.Dao.DaoStore", null)
@@ -131,6 +174,14 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                     b.HasOne("erMarket_varastonhallinta_Dal.Dao.DaoProduct", null)
                         .WithMany("Categories")
                         .HasForeignKey("DaoProductId");
+
+                    b.HasOne("erMarket_varastonhallinta_Dal.Dao.LogData", null)
+                        .WithMany("Categories")
+                        .HasForeignKey("LogDataId");
+
+                    b.HasOne("erMarket_varastonhallinta_Dal.Dao.LogData", null)
+                        .WithMany("NewCategories")
+                        .HasForeignKey("LogDataId1");
                 });
 #pragma warning restore 612, 618
         }

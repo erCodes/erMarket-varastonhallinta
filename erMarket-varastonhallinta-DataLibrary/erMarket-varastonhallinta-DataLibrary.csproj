@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AllCategories.cs" />
     <Compile Include="AllStores.cs" />
+    <Compile Include="ChangeLogData.cs" />
     <Compile Include="NewProductToDb.cs" />
     <Compile Include="Product.cs" />
     <Compile Include="ProductCategory.cs" />

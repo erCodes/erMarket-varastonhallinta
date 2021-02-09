@@ -35,10 +35,181 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
     <script>
+
         function TakeNewValue(elementsId) {
             var inputsValue = document.getElementById(elementsId).value;
             return inputsValue;
         }
+
+        let chart1 = null;
+        function ProductChart(productNames, productCount, title) {
+            console.log(productNames);
+            console.log(productCount);
+            console.log(title);
+
+            // Colors for the chart.
+            var colors = [];
+            while (colors.length < productNames.length) {
+                do {
+                    var color = Math.floor((Math.random() * 1000000) + 1);
+                } while (colors.indexOf(color) >= 0);
+                colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+            }
+            console.log(colors);
+
+            // Chart
+            let myChart1 = document.getElementById('myChart1').getContext('2d');
+
+            Chart.defaults.global.defaultFontFamily = 'Arial';
+            Chart.defaults.global.defaultFontSize = 12;
+            Chart.defaults.global.defaultFontColor = 'green';
+
+            chart1 = new Chart(myChart1, {
+                type: 'pie',
+                data: {
+                    labels: productNames,
+                    datasets: [{
+                        label: 'Tiedot',
+                        data: productCount,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: 'black'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: title,
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            top: 0
+                        }
+                   },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                                var tooltipLabel = data.labels[tooltipItem.index];
+                                var tooltipData = allData[tooltipItem.index];
+                                var total = 0;
+                                for (var i in allData) {
+                                    total += allData[i];
+                                }
+                                var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                                return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        let chart2 = null;
+        function CategoryChart(categoryNames, categoryCount, title) {
+            console.log(categoryNames);
+            console.log(categoryCount);
+            console.log(title);
+
+            // Colors for the chart.
+            var colors = [];
+            while (colors.length < categoryNames.length) {
+                do {
+                    var color = Math.floor((Math.random() * 1000000) + 1);
+                } while (colors.indexOf(color) >= 0);
+                colors.push("#" + ("000000" + color.toString(16)).slice(-6));
+            }
+            console.log(colors);
+
+            // Chart
+            let myChart2 = document.getElementById('myChart2').getContext('2d');
+
+            Chart.defaults.global.defaultFontFamily = 'Arial';
+            Chart.defaults.global.defaultFontSize = 12;
+            Chart.defaults.global.defaultFontColor = 'green';
+
+            chart2 = new Chart(myChart2, {
+                type: 'pie',
+                data: {
+                    labels: categoryNames,
+                    datasets: [{
+                        label: 'Tiedot',
+                        data: categoryCount,
+                        backgroundColor: colors,
+                        borderWidth: 2,
+                        borderColor: 'white',
+                        hoverBorderWidth: 3,
+                        hoverBorderColor: 'black'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    title: {
+                        display: true,
+                        text: title,
+                        fontSize: 25
+                    },
+                    legend: {
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            fontColor: '#000'
+                        }
+                    },
+                    layout: {
+                        padding: {
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            top: 0
+                        }
+                    },
+                    tooltips: {
+                        callbacks: {
+                            label: function (tooltipItem, data) {
+                                var allData = data.datasets[tooltipItem.datasetIndex].data;
+                                var tooltipLabel = data.labels[tooltipItem.index];
+                                var tooltipData = allData[tooltipItem.index];
+                                var total = 0;
+                                for (var i in allData) {
+                                    total += allData[i];
+                                }
+                                var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                                return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+                            }
+                        }
+                    }
+                }
+            })
+        }
+
+        function deleteCharts() {
+
+            if (chart1 != null) {
+                chart1.destroy();
+                chart1 = null;
+            }
+
+            if (chart2 != null) {
+                chart2.destroy();
+                chart2 = null;
+            }
+        }
+
     </script>
 </body>
 </html>

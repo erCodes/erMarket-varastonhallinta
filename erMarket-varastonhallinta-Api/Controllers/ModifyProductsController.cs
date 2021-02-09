@@ -22,6 +22,45 @@ namespace erMarket_varastonhallinta_Api.Controllers
             {
                 if (ProductRepository.ChangeQuantity(data))
                 {
+                    ChangeLogData logData = new ChangeLogData()
+                    {
+                        UserAction = 1,
+                        StoreId = data.StoresId,
+                        ProductsId = data.ProductsId,
+                        ProductsName = data.ProductsName,
+                        Categories = data.,
+                        NewCategories = null,
+                        OldAmount = 0,
+                        NewAmount = int.Parse(data.InStock),
+                        Timestamp = data.QuantityChanged
+                    };
+
+                    return Ok();
+                }
+
+                else
+                {
+                    return StatusCode(500);
+                }
+            }
+
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpDelete("Delete")]
+        [Route("api/removeproduct")]
+        public async Task<IActionResult> RemoveProduct(int id, int ide)
+        {
+            int storesId = id;
+            int productsId = ide;
+
+            if (storesId >= 0 && productsId >= 0)
+            {
+                if (ProductRepository.RemoveProduct(storesId, productsId))
+                {
                     return Ok();
                 }
 

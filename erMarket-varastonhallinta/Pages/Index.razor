@@ -78,6 +78,23 @@
         // Additional Info.
         @if (action == 0)
         {
+            if (displayedInfo.Products.Count > 0)
+            {
+                <div class="container">
+                    <canvas id="myChart1"></canvas>
+                </div>
+
+                <div class="container">
+                    <canvas id="myChart2"></canvas>
+                </div>
+            }
+
+            else
+            {
+                <div class="row">
+                    <div class="col">Myymälässä ei ole tuotteita.</div>
+                </div>
+            }
 
         }
 
@@ -102,10 +119,10 @@
                                 <tr>
                                     <td>@product.Name</td>
                                     <td>
-                                        <div class="d-flex align-items-center">
+                                        <div class="d-flex align-content-center">
                                             <div>@product.InStock&thinsp;</div>
                                             <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
-                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id))">Muuta</button>
+                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id, product.Name))">Muuta</button>
                                         </div>
                                     </td>
                                     <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -116,6 +133,9 @@
                                                 <option>@category.Name</option>
                                             }
                                         </select>
+                                    </td>
+                                    <td>
+                                        <img src="close.png" id="deleteproduct" @onclick="(() => RemoveProduct(displayedInfo.Id, product.Id))" />
                                     </td>
                                 </tr>
                             }
@@ -240,6 +260,13 @@
         }
 
         await GetSelectedStoresData();
+
+        if (action == 0)
+        {
+            await JS.InvokeVoidAsync("deleteCharts");
+            ProductChart();
+        }
+
     }
 
     private async Task GetSelectedStoresData()
@@ -249,11 +276,18 @@
         var response = await Http.GetAsync("http://localhost:54859/api/getstoresdata?storeid=" + displayedInfo.Id);
         Store data = await response.Content.ReadAsAsync<Store>();
         displayedInfo = data;
+        this.StateHasChanged();
     }
 
-    private void ChangeAction(int selected)
+    private async Task ChangeAction(int selected)
     {
         action = selected;
+
+        if (action == 0)
+        {
+            await JS.InvokeVoidAsync("deleteCharts");
+            ProductChart();
+        }
     }
 
     private void CheckboxClicked(ProductCategory category, object checkedCategory)
@@ -302,20 +336,20 @@
         }
     }
 
-    private async Task TakeNewValue(string store, int productId)
+    private async Task TakeNewValue(string store, int productId, string productsName)
     {
         string elementsId = store + "+" + productId.ToString();
 
         string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
 
-        if (int.TryParse(value, out int num))
+        if (int.TryParse(value, out int newQuantity))
         {
-            await ChangeProductsQuantity(productId, num);
+            await ChangeProductsQuantity(productId, newQuantity, productsName);
         }
 
     }
 
-    private async Task ChangeProductsQuantity(int productsId, int newQuantity)
+    private async Task ChangeProductsQuantity(int productsId, int newQuantity, string productsName)
     {
         HttpClient Http = new HttpClient();
 
@@ -323,6 +357,7 @@
         {
             StoresId = displayedInfo.Id,
             ProductsId = productsId,
+            ProductsName = productsName,
             NewQuantity = newQuantity,
             QuantityChanged = DateTime.Now
         };
@@ -332,7 +367,61 @@
 
         if (response.IsSuccessStatusCode)
         {
-            
+
         }
+    }
+
+    private async Task RemoveProduct(int storesId, int productsId)
+    {
+        HttpClient Http = new HttpClient();
+
+        var response = await Http.DeleteAsync($"http://localhost:54859/api/removeproduct/?id={storesId}&ide={productsId}");
+
+        if (response.IsSuccessStatusCode)
+        {
+
+        }
+    }
+
+    private void ProductChart()
+    {
+        List<string> productNames = new List<string>();
+        List<int> productCount = new List<int>();
+        // Localization later to title
+        string title = "Tuotteiden osuus kokonaismäärästä";
+
+        foreach (Product product in displayedInfo.Products)
+        {
+            productNames.Add(product.Name);
+            productCount.Add(product.InStock);
+        }
+
+        JS.InvokeVoidAsync("ProductChart", productNames, productCount, title);
+
+        List<string> categoryNames = new List<string>();
+        List<int> categoryCount = new List<int>();
+        // Localization later to title
+        title = "Tuotteita tuoteryhmässä";
+
+        foreach (ProductCategory c in categories)
+        {
+            categoryNames.Add(c.Name);
+            int count = 0;
+
+            foreach (Product p in displayedInfo.Products)
+            {
+                foreach (ProductCategory pc in p.Groups)
+                {
+                    if (pc.Id == c.Id)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            categoryCount.Add(count);
+        }
+
+        JS.InvokeVoidAsync("CategoryChart", categoryNames, categoryCount, title);
     }
 }

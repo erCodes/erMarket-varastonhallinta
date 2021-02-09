@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using erMarket_varastonhallinta_Dal.Dao;
+using erMarket_varastonhallinta_Dal.Dao.ProductDbClasses;
 using erMarket_varastonhallinta_DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -11,7 +12,7 @@ namespace erMarket_varastonhallinta_Dal.Repositories
 {
     public class ProductRepository
     {
-        public static bool AddProduct(NewProductToDb newProduct)
+        public static (bool, int) AddProduct(NewProductToDb newProduct)
         {
             try
             {
@@ -48,20 +49,28 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                         store.Products = new List<DaoProduct>();
                     }
 
-                    data.ProductsId = store.Products.Max(x => x.ProductsId) + 1;
+                    if (store.Products.Any())
+                    {
+                        data.ProductsId = store.Products.Max(x => x.ProductsId) + 1;
+                    }
+                    
+                    else
+                    {
+                        data.ProductsId = 1;
+                    }
 
                     store.Products.Add(data);
                     db.Entry(store).State = EntityState.Modified;
 
                     db.SaveChanges();
-                    return true;
+                    return (true, data.ProductsId);
                 }
             }
 
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return false;
+                return (false, 0);
             }
         }
 
@@ -97,8 +106,51 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                 }
             }
 
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool RemoveProduct(int storesId, int productsId)
+        {
+            try
+            {
+                using (Context db = new Context())
+                {
+                    DaoStore store = db.Stores
+                        .Where(x => x.StoresId == storesId)
+                        .Include(x => x.Products)
+                        .ThenInclude(x => x.Categories)
+                        .FirstOrDefault();
+
+                    if (store != null)
+                    {
+                        DaoProduct product = store.Products
+                            .Where(x => x.ProductsId == productsId)
+                            .First();
+
+                        foreach (var item in product.Categories)
+                        {
+                            db.Entry(item).State = EntityState.Deleted;
+                        }
+
+                        db.Entry(product).State = EntityState.Deleted;
+                        db.SaveChanges();
+                        return true;
+                    }
+
+                    else
+                    {
+                        return false;
+                    }
+                }
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
                 return false;
             }
         }

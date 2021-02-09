@@ -32,9 +32,32 @@ namespace erMarket_varastonhallinta_Api.Controllers
             // Data is valid
             else
             {
-                if (ProductRepository.AddProduct(data))
+                (bool success, int productsId) = (ProductRepository.AddProduct(data));
+
+                if (success)
                 {
-                    return Ok();
+                    ChangeLogData logData = new ChangeLogData
+                    {
+                        UserAction = 0,
+                        StoreId = data.Store,
+                        ProductsId = productsId,
+                        ProductsName = data.Name,
+                        Categories = data.Groups,
+                        NewCategories = null,
+                        OldAmount = 0,
+                        NewAmount = int.Parse(data.InStock),
+                        Timestamp = data.QuantityChanged
+                    };
+
+                    if (LogRepository.AddEntryToLog(logData))
+                    {
+                        return Ok();
+                    }
+
+                    else
+                    {
+                        return StatusCode(500);
+                    }
                 }
 
                 // 500 = server error
