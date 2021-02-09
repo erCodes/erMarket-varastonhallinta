@@ -4,9 +4,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace erMarket_varastonhallinta_Dal.Dao
+namespace erMarket_varastonhallinta_Dal.Dao.LogDbClasses
 {
-    public class DaoProductCategory
+    public class LogProductCategory
     {
         [Key]
         public int Id { get; set; }

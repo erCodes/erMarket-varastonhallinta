@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using erMarket_varastonhallinta_Dal.Dao;
+using erMarket_varastonhallinta_Dal.Dao.ProductDbClasses;
 using erMarket_varastonhallinta_DataLibrary;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
@@ -11,7 +12,7 @@ namespace erMarket_varastonhallinta_Dal.Repositories
 {
     public class ProductRepository
     {
-        public static bool AddProduct(NewProductToDb newProduct)
+        public static (bool, int) AddProduct(NewProductToDb newProduct)
         {
             try
             {
@@ -62,14 +63,14 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                     db.Entry(store).State = EntityState.Modified;
 
                     db.SaveChanges();
-                    return true;
+                    return (true, data.ProductsId);
                 }
             }
 
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return false;
+                return (false, 0);
             }
         }
 

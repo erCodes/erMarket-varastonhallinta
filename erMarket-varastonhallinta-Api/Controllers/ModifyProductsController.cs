@@ -22,6 +22,19 @@ namespace erMarket_varastonhallinta_Api.Controllers
             {
                 if (ProductRepository.ChangeQuantity(data))
                 {
+                    ChangeLogData logData = new ChangeLogData()
+                    {
+                        UserAction = 1,
+                        StoreId = data.StoresId,
+                        ProductsId = data.ProductsId,
+                        ProductsName = data.ProductsName,
+                        Categories = data.,
+                        NewCategories = null,
+                        OldAmount = 0,
+                        NewAmount = int.Parse(data.InStock),
+                        Timestamp = data.QuantityChanged
+                    };
+
                     return Ok();
                 }
 

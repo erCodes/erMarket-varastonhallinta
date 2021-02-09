@@ -8,6 +8,25 @@ namespace erMarket_varastonhallinta_Dal.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "ChangeLog",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserAction = table.Column<int>(nullable: false),
+                    StoreId = table.Column<int>(nullable: false),
+                    ProductsId = table.Column<int>(nullable: false),
+                    ProductsName = table.Column<string>(nullable: true),
+                    OldAmount = table.Column<int>(nullable: false),
+                    NewAmount = table.Column<int>(nullable: false),
+                    Timestamp = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ChangeLog", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ProductCategories",
                 columns: table => new
                 {
@@ -70,7 +89,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategorysId = table.Column<int>(nullable: false),
                     CategorysName = table.Column<string>(nullable: true),
-                    DaoProductId = table.Column<int>(nullable: true)
+                    DaoProductId = table.Column<int>(nullable: true),
+                    LogDataId = table.Column<int>(nullable: true),
+                    LogDataId1 = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -79,6 +100,18 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                         name: "FK_DaoProductCategory_DaoProduct_DaoProductId",
                         column: x => x.DaoProductId,
                         principalTable: "DaoProduct",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DaoProductCategory_ChangeLog_LogDataId",
+                        column: x => x.LogDataId,
+                        principalTable: "ChangeLog",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DaoProductCategory_ChangeLog_LogDataId1",
+                        column: x => x.LogDataId1,
+                        principalTable: "ChangeLog",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -92,6 +125,16 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 name: "IX_DaoProductCategory_DaoProductId",
                 table: "DaoProductCategory",
                 column: "DaoProductId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DaoProductCategory_LogDataId",
+                table: "DaoProductCategory",
+                column: "LogDataId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DaoProductCategory_LogDataId1",
+                table: "DaoProductCategory",
+                column: "LogDataId1");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -104,6 +147,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
 
             migrationBuilder.DropTable(
                 name: "DaoProduct");
+
+            migrationBuilder.DropTable(
+                name: "ChangeLog");
 
             migrationBuilder.DropTable(
                 name: "Stores");

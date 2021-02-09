@@ -255,20 +255,20 @@ using erMarket_varastonhallinta_DataLibrary;
         }
     }
 
-    private async Task TakeNewValue(string store, int productId)
+    private async Task TakeNewValue(string store, int productId, string productsName)
     {
         string elementsId = store + "+" + productId.ToString();
 
         string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
 
-        if (int.TryParse(value, out int num))
+        if (int.TryParse(value, out int newQuantity))
         {
-            await ChangeProductsQuantity(productId, num);
+            await ChangeProductsQuantity(productId, newQuantity, productsName);
         }
 
     }
 
-    private async Task ChangeProductsQuantity(int productsId, int newQuantity)
+    private async Task ChangeProductsQuantity(int productsId, int newQuantity, string productsName)
     {
         HttpClient Http = new HttpClient();
 
