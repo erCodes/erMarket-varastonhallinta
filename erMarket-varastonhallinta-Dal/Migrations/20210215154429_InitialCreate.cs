@@ -59,6 +59,34 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "LogProductCategory",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CategorysId = table.Column<int>(nullable: false),
+                    CategorysName = table.Column<string>(nullable: true),
+                    LogDataId = table.Column<int>(nullable: true),
+                    LogDataId1 = table.Column<int>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LogProductCategory", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_LogProductCategory_ChangeLog_LogDataId",
+                        column: x => x.LogDataId,
+                        principalTable: "ChangeLog",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_LogProductCategory_ChangeLog_LogDataId1",
+                        column: x => x.LogDataId1,
+                        principalTable: "ChangeLog",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DaoProduct",
                 columns: table => new
                 {
@@ -89,9 +117,7 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     CategorysId = table.Column<int>(nullable: false),
                     CategorysName = table.Column<string>(nullable: true),
-                    DaoProductId = table.Column<int>(nullable: true),
-                    LogDataId = table.Column<int>(nullable: true),
-                    LogDataId1 = table.Column<int>(nullable: true)
+                    DaoProductId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -100,18 +126,6 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                         name: "FK_DaoProductCategory_DaoProduct_DaoProductId",
                         column: x => x.DaoProductId,
                         principalTable: "DaoProduct",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DaoProductCategory_ChangeLog_LogDataId",
-                        column: x => x.LogDataId,
-                        principalTable: "ChangeLog",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DaoProductCategory_ChangeLog_LogDataId1",
-                        column: x => x.LogDataId1,
-                        principalTable: "ChangeLog",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -127,13 +141,13 @@ namespace erMarket_varastonhallinta_Dal.Migrations
                 column: "DaoProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DaoProductCategory_LogDataId",
-                table: "DaoProductCategory",
+                name: "IX_LogProductCategory_LogDataId",
+                table: "LogProductCategory",
                 column: "LogDataId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DaoProductCategory_LogDataId1",
-                table: "DaoProductCategory",
+                name: "IX_LogProductCategory_LogDataId1",
+                table: "LogProductCategory",
                 column: "LogDataId1");
         }
 
@@ -141,6 +155,9 @@ namespace erMarket_varastonhallinta_Dal.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DaoProductCategory");
+
+            migrationBuilder.DropTable(
+                name: "LogProductCategory");
 
             migrationBuilder.DropTable(
                 name: "ProductCategories");

@@ -49,7 +49,7 @@ namespace erMarket_varastonhallinta_Api.Controllers
                         Timestamp = data.QuantityChanged
                     };
 
-                    if (LogRepository.AddEntryToLog(logData))
+                    if (LogRepository.AddNewEntry(logData))
                     {
                         return Ok();
                     }

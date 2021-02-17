@@ -39,7 +39,7 @@
             }
         }
         <div class="col-auto py-3">
-            <button type="button" class="stores btn-info">Muutosloki</button>
+            <button type="button" class="stores btn-info" @onclick="GetLogData">Muutosloki</button>
         </div>
     </div>
 
@@ -122,7 +122,7 @@
                                         <div class="d-flex align-content-center">
                                             <div>@product.InStock&thinsp;</div>
                                             <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
-                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id, product.Name))">Muuta</button>
+                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product))">Muuta</button>
                                         </div>
                                     </td>
                                     <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -197,6 +197,7 @@
     string newProductName;
     string newProductQuantity;
     List<ProductCategory> newProductCategories = new List<ProductCategory>();
+    List<ChangeLogData> logData = new List<ChangeLogData>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -269,6 +270,23 @@
 
     }
 
+    private async Task GetLogData()
+    {
+        HttpClient Http = new HttpClient();
+        var response = await Http.GetAsync("http://localhost:54859/api/getlogdata");
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            logData = await response.Content.ReadAsAsync<List<ChangeLogData>>();
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
+    }
+
     private async Task GetSelectedStoresData()
     {
         HttpClient Http = new HttpClient();
@@ -336,29 +354,31 @@
         }
     }
 
-    private async Task TakeNewValue(string store, int productId, string productsName)
+    private async Task TakeNewValue(string store, Product product)
     {
-        string elementsId = store + "+" + productId.ToString();
+        string elementsId = store + "+" + product.Id.ToString();
 
         string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
 
         if (int.TryParse(value, out int newQuantity))
         {
-            await ChangeProductsQuantity(productId, newQuantity, productsName);
+            await ChangeProductsQuantity(newQuantity, product);
         }
 
     }
 
-    private async Task ChangeProductsQuantity(int productsId, int newQuantity, string productsName)
+    private async Task ChangeProductsQuantity(int newQuantity, Product product)
     {
         HttpClient Http = new HttpClient();
 
         ProductToBeChanged productToBeChanged = new ProductToBeChanged
         {
             StoresId = displayedInfo.Id,
-            ProductsId = productsId,
-            ProductsName = productsName,
+            ProductsId = product.Id,
+            ProductsName = product.Name,
+            Categories = product.Groups,
             NewQuantity = newQuantity,
+            OldAmount = product.InStock,
             QuantityChanged = DateTime.Now
         };
 
