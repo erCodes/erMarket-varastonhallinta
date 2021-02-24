@@ -105,7 +105,7 @@ using erMarket_varastonhallinta_DataLibrary;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 190 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
+#line 289 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
  
     static List<ProductCategory> categories = new List<ProductCategory>();
     List<Store> stores = new List<Store>();
@@ -175,6 +175,7 @@ using erMarket_varastonhallinta_DataLibrary;
             if (s.Id == id)
             {
                 displayedInfo = s;
+                action = 0;
                 break;
             }
         }
@@ -197,6 +198,8 @@ using erMarket_varastonhallinta_DataLibrary;
         if (response.StatusCode == HttpStatusCode.OK)
         {
             logData = await response.Content.ReadAsAsync<List<ChangeLogData>>();
+            action = 3;
+            displayedInfo = null;
         }
 
         // Error case. Only for testing.
@@ -269,6 +272,10 @@ using erMarket_varastonhallinta_DataLibrary;
 
         if (response.IsSuccessStatusCode)
         {
+            newProductName = "";
+            newProductQuantity = "";
+            newProductCategories.Clear();
+            await JS.InvokeVoidAsync("ResetForm");
             await GetSelectedStoresData();
         }
     }
