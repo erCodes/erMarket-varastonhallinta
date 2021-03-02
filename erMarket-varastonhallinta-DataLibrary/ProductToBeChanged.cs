@@ -11,6 +11,8 @@ namespace erMarket_varastonhallinta_DataLibrary
         public int StoresId { get; set; }
         public int ProductsId { get; set; }
         public string ProductsName { get; set; }
+        public List<ProductCategory> Categories { get; set; }
+        public int OldAmount { get; set; }
         public int NewQuantity { get; set; }
         public DateTime QuantityChanged { get; set; }
     }

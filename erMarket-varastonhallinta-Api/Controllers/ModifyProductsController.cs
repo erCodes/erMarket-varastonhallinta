@@ -28,14 +28,22 @@ namespace erMarket_varastonhallinta_Api.Controllers
                         StoreId = data.StoresId,
                         ProductsId = data.ProductsId,
                         ProductsName = data.ProductsName,
-                        Categories = data.,
+                        Categories = data.Categories,
                         NewCategories = null,
-                        OldAmount = 0,
-                        NewAmount = int.Parse(data.InStock),
+                        OldAmount = data.OldAmount,
+                        NewAmount = data.NewQuantity,
                         Timestamp = data.QuantityChanged
                     };
 
-                    return Ok();
+                    if (LogRepository.AddNewEntry(logData))
+                    {
+                        return Ok();
+                    }
+
+                    else
+                    {
+                        return StatusCode(500);
+                    }
                 }
 
                 else
@@ -50,7 +58,7 @@ namespace erMarket_varastonhallinta_Api.Controllers
             }
         }
 
-        [HttpDelete("Delete")]
+        [HttpDelete]
         [Route("api/removeproduct")]
         public async Task<IActionResult> RemoveProduct(int id, int ide)
         {
@@ -59,11 +67,34 @@ namespace erMarket_varastonhallinta_Api.Controllers
 
             if (storesId >= 0 && productsId >= 0)
             {
-                if (ProductRepository.RemoveProduct(storesId, productsId))
-                {
-                    return Ok();
-                }
+                (bool success, Product productToLog) = (ProductRepository.RemoveProduct(storesId, productsId));
 
+                if (success)
+                {
+                    ChangeLogData logData = new ChangeLogData()
+                    {
+                        UserAction = 2,
+                        StoreId = storesId,
+                        ProductsId = productToLog.Id,
+                        ProductsName = productToLog.Name,
+                        Categories = productToLog.Groups,
+                        NewCategories = null,
+                        OldAmount = productToLog.InStock,
+                        NewAmount = 0,
+                        Timestamp = DateTime.Now
+                    };
+
+                    if (LogRepository.AddNewEntry(logData))
+                    {
+                        return Ok();
+                    }
+
+                    else
+                    {
+                        return StatusCode(500);
+                    }
+                }
+                
                 else
                 {
                     return StatusCode(500);

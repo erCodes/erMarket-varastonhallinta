@@ -113,7 +113,7 @@ namespace erMarket_varastonhallinta_Dal.Repositories
             }
         }
 
-        public static bool RemoveProduct(int storesId, int productsId)
+        public static (bool, Product) RemoveProduct(int storesId, int productsId)
         {
             try
             {
@@ -131,19 +131,36 @@ namespace erMarket_varastonhallinta_Dal.Repositories
                             .Where(x => x.ProductsId == productsId)
                             .First();
 
-                        foreach (var item in product.Categories)
+                        Product productToLog = new Product()
+                        {
+                            Id = product.ProductsId,
+                            Name = product.Name,
+                            InStock = product.InStock
+                        };
+
+                        foreach (DaoProductCategory c in product.Categories)
+                        {
+                            ProductCategory category = new ProductCategory()
+                            {
+                                Id = c.CategorysId,
+                                Name = c.CategorysName
+                            };
+                            productToLog.Groups.Add(category);
+                        }
+
+                        foreach (DaoProductCategory item in product.Categories)
                         {
                             db.Entry(item).State = EntityState.Deleted;
                         }
 
                         db.Entry(product).State = EntityState.Deleted;
                         db.SaveChanges();
-                        return true;
+                        return (true, productToLog);
                     }
 
                     else
                     {
-                        return false;
+                        return (false, null);
                     }
                 }
             }
@@ -151,7 +168,7 @@ namespace erMarket_varastonhallinta_Dal.Repositories
             catch (Exception e)
             {
                 Console.WriteLine(e);
-                return false;
+                return (false, null);
             }
         }
 

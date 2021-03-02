@@ -39,7 +39,7 @@
             }
         }
         <div class="col-auto py-3">
-            <button type="button" class="stores btn-info">Muutosloki</button>
+            <button type="button" class="stores btn-info" @onclick="GetLogData">Muutosloki</button>
         </div>
     </div>
 
@@ -122,7 +122,7 @@
                                         <div class="d-flex align-content-center">
                                             <div>@product.InStock&thinsp;</div>
                                             <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
-                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product.Id, product.Name))">Muuta</button>
+                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product))">Muuta</button>
                                         </div>
                                     </td>
                                     <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -149,7 +149,7 @@
         else if (action == 2)
         {
             <h5>Lisää uusi tuote</h5>
-            <form>
+            <form id="newproductform">
                 <div class="row">
                     <div class="col-md-6 py-2">
                         <label for="productName">Tuotteen nimi</label>
@@ -182,6 +182,105 @@
         }
     }
 
+    @* Activity log *@
+    @if (action == 3)
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Toiminto</th>
+                        <th scope="col">Aika</th>
+                        <th scope="col">Myymälä</th>
+                        <th scope="col">Tuotteen nimi</th>
+                        <th scope="col">Määrä</th>
+                        <th scope="col">Uusi määrä</th>
+                        <th scope="col">Tuoteryhmät</th>
+                        <th scope="col">Uudet tuoteryhmät</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (ChangeLogData entry in logData)
+                    {
+                        <tr>
+                            @switch (entry.UserAction)
+                            {
+                                case 0:
+                                    <td>Lisätty</td>
+                                    break;
+
+                                case 1:
+                                    <td>Muutettu</td>
+                                    break;
+
+                                case 2:
+                                    <td>Poistettu</td>
+                                    break;
+
+                                case 3:
+                                    <td>Tuoteryhmiä muutettu</td>
+                                    break;
+
+                                default:
+                                    <td>-</td>
+                                    break;
+                            }
+
+                            <td>@entry.Timestamp.ToShortDateString()&nbsp;@entry.Timestamp.ToShortTimeString()</td>
+
+                            @foreach (Store store in stores)
+                            {
+                                if (entry.StoreId == store.Id)
+                                {
+                                    // City will later be changed to a store name.
+                                    <td>@store.City</td>
+                                    break;
+                                }
+
+                                else if (store == stores.Last())
+                                {
+                                    <td>Error!</td>
+                                }
+                            }
+
+                            <td>@entry.ProductsName</td>
+
+                            <td>@entry.OldAmount</td>
+
+                            <td>@entry.NewAmount</td>
+
+                            <td>
+                                <select class="form-control-sm">
+                                    @foreach (ProductCategory category in entry.Categories)
+                                    {
+                                        <option>@category.Name</option>
+                                    }
+                                </select>
+                            </td>
+
+                            @if (entry.NewCategories.Count > 0)
+                            {
+                                <td>
+                                    <select class="form-control-sm">
+                                        @foreach (ProductCategory category in entry.NewCategories)
+                                        {
+                                            <option>@category.Name</option>
+                                        }
+                                    </select>
+                                </td>
+                            }
+
+                            else
+                            {
+                                <td>-</td>
+                            }
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 
 
 </div>
@@ -197,6 +296,7 @@
     string newProductName;
     string newProductQuantity;
     List<ProductCategory> newProductCategories = new List<ProductCategory>();
+    List<ChangeLogData> logData = new List<ChangeLogData>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -255,6 +355,7 @@
             if (s.Id == id)
             {
                 displayedInfo = s;
+                action = 0;
                 break;
             }
         }
@@ -267,6 +368,25 @@
             ProductChart();
         }
 
+    }
+
+    private async Task GetLogData()
+    {
+        HttpClient Http = new HttpClient();
+        var response = await Http.GetAsync("http://localhost:54859/api/getlogdata");
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            logData = await response.Content.ReadAsAsync<List<ChangeLogData>>();
+            action = 3;
+            displayedInfo = null;
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
     }
 
     private async Task GetSelectedStoresData()
@@ -332,33 +452,39 @@
 
         if (response.IsSuccessStatusCode)
         {
+            newProductName = "";
+            newProductQuantity = "";
+            newProductCategories.Clear();
+            await JS.InvokeVoidAsync("ResetForm");
             await GetSelectedStoresData();
         }
     }
 
-    private async Task TakeNewValue(string store, int productId, string productsName)
+    private async Task TakeNewValue(string store, Product product)
     {
-        string elementsId = store + "+" + productId.ToString();
+        string elementsId = store + "+" + product.Id.ToString();
 
         string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
 
         if (int.TryParse(value, out int newQuantity))
         {
-            await ChangeProductsQuantity(productId, newQuantity, productsName);
+            await ChangeProductsQuantity(newQuantity, product);
         }
 
     }
 
-    private async Task ChangeProductsQuantity(int productsId, int newQuantity, string productsName)
+    private async Task ChangeProductsQuantity(int newQuantity, Product product)
     {
         HttpClient Http = new HttpClient();
 
         ProductToBeChanged productToBeChanged = new ProductToBeChanged
         {
             StoresId = displayedInfo.Id,
-            ProductsId = productsId,
-            ProductsName = productsName,
+            ProductsId = product.Id,
+            ProductsName = product.Name,
+            Categories = product.Groups,
             NewQuantity = newQuantity,
+            OldAmount = product.InStock,
             QuantityChanged = DateTime.Now
         };
 

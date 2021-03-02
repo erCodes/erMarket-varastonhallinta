@@ -22,6 +22,7 @@ namespace erMarket_varastonhallinta_DataLibrary
         public ChangeLogData()
         {
             Categories = new List<ProductCategory>();
+            NewCategories = new List<ProductCategory>();
         }
     }
 }

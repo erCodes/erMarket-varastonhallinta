@@ -105,7 +105,7 @@ using erMarket_varastonhallinta_DataLibrary;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 190 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
+#line 289 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
  
     static List<ProductCategory> categories = new List<ProductCategory>();
     List<Store> stores = new List<Store>();
@@ -116,6 +116,7 @@ using erMarket_varastonhallinta_DataLibrary;
     string newProductName;
     string newProductQuantity;
     List<ProductCategory> newProductCategories = new List<ProductCategory>();
+    List<ChangeLogData> logData = new List<ChangeLogData>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -174,6 +175,7 @@ using erMarket_varastonhallinta_DataLibrary;
             if (s.Id == id)
             {
                 displayedInfo = s;
+                action = 0;
                 break;
             }
         }
@@ -186,6 +188,25 @@ using erMarket_varastonhallinta_DataLibrary;
             ProductChart();
         }
 
+    }
+
+    private async Task GetLogData()
+    {
+        HttpClient Http = new HttpClient();
+        var response = await Http.GetAsync("http://localhost:54859/api/getlogdata");
+
+        if (response.StatusCode == HttpStatusCode.OK)
+        {
+            logData = await response.Content.ReadAsAsync<List<ChangeLogData>>();
+            action = 3;
+            displayedInfo = null;
+        }
+
+        // Error case. Only for testing.
+        else
+        {
+            throw new Exception();
+        }
     }
 
     private async Task GetSelectedStoresData()
@@ -251,32 +272,39 @@ using erMarket_varastonhallinta_DataLibrary;
 
         if (response.IsSuccessStatusCode)
         {
+            newProductName = "";
+            newProductQuantity = "";
+            newProductCategories.Clear();
+            await JS.InvokeVoidAsync("ResetForm");
             await GetSelectedStoresData();
         }
     }
 
-    private async Task TakeNewValue(string store, int productId, string productsName)
+    private async Task TakeNewValue(string store, Product product)
     {
-        string elementsId = store + "+" + productId.ToString();
+        string elementsId = store + "+" + product.Id.ToString();
 
         string value = await JS.InvokeAsync<string>("TakeNewValue", elementsId);
 
         if (int.TryParse(value, out int newQuantity))
         {
-            await ChangeProductsQuantity(productId, newQuantity, productsName);
+            await ChangeProductsQuantity(newQuantity, product);
         }
 
     }
 
-    private async Task ChangeProductsQuantity(int productsId, int newQuantity, string productsName)
+    private async Task ChangeProductsQuantity(int newQuantity, Product product)
     {
         HttpClient Http = new HttpClient();
 
         ProductToBeChanged productToBeChanged = new ProductToBeChanged
         {
             StoresId = displayedInfo.Id,
-            ProductsId = productsId,
+            ProductsId = product.Id,
+            ProductsName = product.Name,
+            Categories = product.Groups,
             NewQuantity = newQuantity,
+            OldAmount = product.InStock,
             QuantityChanged = DateTime.Now
         };
 
