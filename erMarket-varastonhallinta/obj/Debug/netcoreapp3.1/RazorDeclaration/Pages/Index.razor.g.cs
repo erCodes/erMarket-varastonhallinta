@@ -105,13 +105,13 @@ using erMarket_varastonhallinta_DataLibrary;
         }
         #pragma warning restore 1998
 #nullable restore
-#line 289 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
+#line 297 "D:\Sekalaiset tiedostot\erMarket-varastonhallinta\erMarket-varastonhallinta\Pages\Index.razor"
  
     static List<ProductCategory> categories = new List<ProductCategory>();
     List<Store> stores = new List<Store>();
     Store displayedInfo = null;
     int action = 0;
-    int newValue = 0;
+    bool addStore = false;
 
     string newProductName;
     string newProductQuantity;
@@ -167,6 +167,20 @@ using erMarket_varastonhallinta_DataLibrary;
             throw new Exception();
         }
     }
+
+    private void AddStore()
+    {
+        if (!addStore)
+        {
+            addStore = true;
+        }
+
+        else
+        {
+            addStore = false;
+        }
+    }
+
 
     private async Task SelectedStore(int id)
     {

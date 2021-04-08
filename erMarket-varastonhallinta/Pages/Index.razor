@@ -34,18 +34,26 @@
             @foreach (Store s in stores)
             {
                 <div class="col-auto py-3">
-                    <button type="button" class="stores btn-primary" value="@s.Id" @onclick="(() => SelectedStore(s.Id))">@s.City</button>
+                    <button type="button" class="stores btn-primary" value="@s.Id" @onclick="(() => SelectedStore(s.Id))">@s.Name</button>
                 </div>
             }
+            <div class="col-auto py-3">
+                <button type="button" class="stores btn-secondary" @onclick="AddStore">Lisää myymälä</button>
+            </div>
         }
         <div class="col-auto py-3">
             <button type="button" class="stores btn-info" @onclick="GetLogData">Muutosloki</button>
         </div>
     </div>
 
+    @if (addStore)
+    {
+        <div>TESTI</div>
+    }
+
     @if (displayedInfo != null)
     {
-        <h5>@displayedInfo.City</h5>
+        <h5>@displayedInfo.Name</h5>
         <div class="row py-2 text-nowrap">
             <div class="col-sm-3">Osoite:</div>
             <div class="col-sm">@displayedInfo.Address</div>
@@ -121,8 +129,8 @@
                                     <td>
                                         <div class="d-flex align-content-center">
                                             <div>@product.InStock&thinsp;</div>
-                                            <input type="number" id="@displayedInfo.City+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
-                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.City, product))">Muuta</button>
+                                            <input type="number" id="@displayedInfo.Name+@product.Id" min="0" max="9999" step="1" style="width: 80px;" class="form-control-sm" />&thinsp;
+                                            <button class="productbutton productbuttonsubmit" @onclick="(() => TakeNewValue(displayedInfo.Name, product))">Muuta</button>
                                         </div>
                                     </td>
                                     <td>@product.QuantityChanged.Date.ToShortDateString()</td>
@@ -191,7 +199,8 @@
                     <tr>
                         <th scope="col">Toiminto</th>
                         <th scope="col">Aika</th>
-                        <th scope="col">Myymälä</th>
+                        <th scope="col">Myymälän nimi</th>
+                        <th scope="col">Kaupunki</th>
                         <th scope="col">Tuotteen nimi</th>
                         <th scope="col">Määrä</th>
                         <th scope="col">Uusi määrä</th>
@@ -202,6 +211,7 @@
                 <tbody>
                     @foreach (ChangeLogData entry in logData)
                     {
+                        string city = "";
                         <tr>
                             @switch (entry.UserAction)
                             {
@@ -232,8 +242,8 @@
                             {
                                 if (entry.StoreId == store.Id)
                                 {
-                                    // City will later be changed to a store name.
-                                    <td>@store.City</td>
+                                    city = store.City;
+                                    <td>@store.Name</td>
                                     break;
                                 }
 
@@ -291,7 +301,7 @@
     List<Store> stores = new List<Store>();
     Store displayedInfo = null;
     int action = 0;
-    int newValue = 0;
+    bool addStore = false;
 
     string newProductName;
     string newProductQuantity;
@@ -347,6 +357,20 @@
             throw new Exception();
         }
     }
+
+    private void AddStore()
+    {
+        if (!addStore)
+        {
+            addStore = true;
+        }
+
+        else
+        {
+            addStore = false;
+        }
+    }
+
 
     private async Task SelectedStore(int id)
     {
